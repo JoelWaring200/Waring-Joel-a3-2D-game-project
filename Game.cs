@@ -1,5 +1,6 @@
-﻿// Include the namespaces (code libraries) you need below.
+// Include the namespaces (code libraries) you need below.
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Numerics;
 using System.Security.Cryptography.X509Certificates;
@@ -48,7 +49,10 @@ namespace MohawkGame2D
         Button rulesRightArrowB = new Button(350, 500, 50, 50, "<-", 40, new Color(70, 130, 180, 255));
         Button rulesLeftArrowB = new Button(350, 400, 50, 50, "->", 40, new Color(70, 130, 180, 255));
         Button rulesSpaceB = new Button(250, 300, 150, 50, "Space", 40, new Color(70, 130, 180, 255));
+
         Player Character = new Player(390, 420, 20, 20, 3, 2.0f);
+
+        Platforms test = new Platforms(20, 20, 20, 20, new Color(70, 130, 180, 255), new Vector2(20, 20), new Vector2(400, 20), new Vector2(10, 0));
         /// <summary>
         ///     Setup runs once before the game loop begins.
         /// </summary>
@@ -94,6 +98,9 @@ namespace MohawkGame2D
                     rulesScreen = true;
                     titleScreen = false;
                 }
+
+                //test
+                test.Update();
             }
             if (rulesScreen)
             {
@@ -211,8 +218,7 @@ namespace MohawkGame2D
             {
                 Draw.FillColor = Color.White;
                 Draw.Rectangle(new Vector2(200, 300), new Vector2(400, 250));
-                Character.drawPlayer();
-                Character.SimulateGravity();
+                Character.update();
             }
             if (levelTwo)
             {

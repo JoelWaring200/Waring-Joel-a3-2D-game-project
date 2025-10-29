@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Numerics;
+using System.Security.Cryptography.X509Certificates;
 
 // The namespace your code is in.
 namespace MohawkGame2D
@@ -17,8 +18,8 @@ namespace MohawkGame2D
         int Height = 600;
 
         //game states
-        bool titleScreen = false;
-        bool rulesScreen = true;
+        bool titleScreen = true;
+        bool rulesScreen = false;
         bool levelsScreen = false;
         bool levelOne = false;
         bool levelTwo = false;
@@ -47,7 +48,7 @@ namespace MohawkGame2D
         Button rulesRightArrowB = new Button(350, 500, 50, 50, "<-", 40, new Color(70, 130, 180, 255));
         Button rulesLeftArrowB = new Button(350, 400, 50, 50, "->", 40, new Color(70, 130, 180, 255));
         Button rulesSpaceB = new Button(250, 300, 150, 50, "Space", 40, new Color(70, 130, 180, 255));
-
+        Player Character = new Player(390, 420, 20, 20, 3, 2.0f);
         /// <summary>
         ///     Setup runs once before the game loop begins.
         /// </summary>
@@ -62,12 +63,12 @@ namespace MohawkGame2D
         /// </summary>
         public void Update()
         {
+            
             //mouse pos
             Vector2 mousePos = Input.GetMousePosition();
             //drawing the screen
             Window.ClearBackground(Color.Black);
             GameStateControl();
-            
             
         }
         void GameStateControl()
@@ -88,7 +89,7 @@ namespace MohawkGame2D
                     levelsScreen = true;
                     titleScreen = false;
                 }
-                if (rulesButton.clicked(mousePos)) 
+                if (rulesButton.clicked(mousePos))
                 {
                     rulesScreen = true;
                     titleScreen = false;
@@ -102,7 +103,7 @@ namespace MohawkGame2D
                 Text.Draw("Rules", new Vector2(305, 50));
                 //buttons
                 backButton.drawButton(mousePos);
-                
+
                 //tracking button clicks
                 if (backButton.clicked(mousePos))
                 {
@@ -168,9 +169,12 @@ namespace MohawkGame2D
                 Draw.Line(new Vector2(790, 570), new Vector2(790, 280));
                 Draw.Line(new Vector2(790, 280), new Vector2(700, 280));
                 Draw.Line(new Vector2(530, 280), new Vector2(590, 280));
+                
             }
             if (levelsScreen)
             {
+                Draw.LineSize = 1;
+                Draw.LineColor = Color.Black;
                 //Title
                 Text.Size = 70;
                 Text.Color = Color.White;
@@ -201,22 +205,25 @@ namespace MohawkGame2D
                     titleScreen = true;
                     levelsScreen = false;
                 }
-                
+
             }
             if (levelOne)
             {
-                // make the levels
+                Draw.FillColor = Color.White;
+                Draw.Rectangle(new Vector2(200, 300), new Vector2(400, 250));
+                Character.drawPlayer();
+                Character.SimulateGravity();
             }
             if (levelTwo)
             {
-
+                Draw.FillColor = Color.White;
+                Draw.Rectangle(new Vector2(200, 300), new Vector2(400, 250));
             }
             if (levelThree)
             {
-
+                Draw.FillColor = Color.White;
+                Draw.Rectangle(new Vector2(200, 300), new Vector2(400, 250));
             }
-
-
         }
     }
     

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Numerics;
 
 namespace MohawkGame2D
@@ -64,7 +64,7 @@ namespace MohawkGame2D
             Draw.Circle(eyeCenterRight.X + rightPupilOffset.X, eyeCenterRight.Y + rightPupilOffset.Y, pupilRadius);
         }
 
-        public void SimulateGravity()
+        public void simGravity()
         {
             // Apply gravity
             velocity += gravity * Time.DeltaTime;
@@ -96,15 +96,44 @@ namespace MohawkGame2D
                 velocity.Y -= movementSpeed * 200;
                 isGrounded = false;
             }
-            if (Input.IsKeyboardKeyDown(KeyboardInput.A) || Input.IsKeyboardKeyPressed(KeyboardInput.Left))
+            if (Input.IsKeyboardKeyDown(KeyboardInput.A) || Input.IsKeyboardKeyDown(KeyboardInput.Left))
             {
                 velocity.X -= movementSpeed;
             }
-            if (Input.IsKeyboardKeyDown(KeyboardInput.D) || Input.IsKeyboardKeyPressed(KeyboardInput.Right))
+            if (Input.IsKeyboardKeyDown(KeyboardInput.D) || Input.IsKeyboardKeyDown(KeyboardInput.Right))
             {
                 velocity.X += movementSpeed;
             }
             
+        }
+        public void health()
+        {
+            if(x + width >= 600 || x <= 200)
+            {
+                currentHealth -= 1;
+                x = 390;
+                y = 420;
+                velocity.Y = 0;
+                velocity.X = 0;
+
+            }
+            for(int i = 0; i < maxHealth; i++)
+            {
+                Draw.FillColor = Color.Gray;
+                Draw.Rectangle(i * 40 + 20, 80, 30, 30);
+            }
+            for(int i = 0; i < currentHealth; i++)
+            {
+                Draw.FillColor = new Color(120, 6, 6, 255);
+                Draw.Rectangle(i * 40 + 20, 80, 30, 30);
+            }
+            Console.WriteLine(currentHealth);
+        }
+        public void update()
+        {
+            health();
+            simGravity();
+            drawPlayer();
         }
     }
 }

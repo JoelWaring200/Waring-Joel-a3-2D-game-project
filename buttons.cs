@@ -15,7 +15,8 @@ namespace MohawkGame2D
         private int fontSize;
         private Color color;
         private Color hoverColor;
-
+        
+        
         public Button( int x, int y, int width, int height, string text, int fontSize, Color color)
         {
             this.width = width;

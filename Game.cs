@@ -35,7 +35,7 @@ namespace MohawkGame2D
         Button levelOneButton = new Button(50, 250, 200, 200, "ONE", 50, new Color(70, 130, 180, 255));
         Button levelTwoButton = new Button(300, 250, 200, 200, "TWO", 50, new Color(70, 130, 180, 255));
         Button levelThreeButton = new Button(550, 250, 200, 200, "THREE", 50, new Color(70, 130, 180, 255));
-        //fake buttons
+        //fake buttons for rules
         Button rulesW = new Button(150, 150, 50, 50, "W", 40, new Color(70, 130, 180, 255));
         Button rulesA = new Button(100, 200, 50, 50, "A", 40, new Color(70, 130, 180, 255));
         Button rulesD = new Button(200, 200, 50, 50, "D", 40, new Color(70, 130, 180, 255));
@@ -52,7 +52,9 @@ namespace MohawkGame2D
         //character creation
         Player Character = new Player(390, 420, 20, 20, 3, 2.0f);
         // enemy Creation
-        Enemy sadEnemy = new Enemy(300, 50, 200, 200, 3, Color.Green, true, false, false);
+        Enemy blandEnemy = new Enemy(300, 50, 200, 200, 3, 3, Color.Green, false, false, true);
+        Enemy happyEnemy = new Enemy(300, 50, 200, 200, 3, 5, Color.Green, false, true, false);
+        Enemy sadEnemy = new Enemy(300, 50, 200, 200, 3, 7, Color.Green, true, false, false);
         //characters "stand"
         List<Platforms> playerPlatforms = new List<Platforms>
             {
@@ -68,7 +70,6 @@ namespace MohawkGame2D
         public void Setup()
         {
             Window.SetSize(Width, Height);
-            
         }
 
         /// <summary>
@@ -107,9 +108,6 @@ namespace MohawkGame2D
                     rulesScreen = true;
                     titleScreen = false;
                 }
-
-                //test
-                test.Update();
             }
             if (rulesScreen)
             {
@@ -225,45 +223,63 @@ namespace MohawkGame2D
             }
             if (levelOne)
             {
+                //player area
                 Draw.FillColor = Color.White;
                 Draw.Rectangle(new Vector2(200, 300), new Vector2(400, 250));
+                //set players platforms
                 foreach(Platforms platform in playerPlatforms)
                 {
                     platform.Update();
                 };
+                //attack logic (empty till enemy)
                 foreach (Platforms platform in attackPlatforms)
                 {
                     platform.Update();
                 };
-                Character.update(playerPlatforms);
-                sadEnemy.update();
+                //player
+                Character.update(playerPlatforms, attackPlatforms);
+                //enemy type
+                blandEnemy.update();
             }
             if (levelTwo)
             {
+                //player area
                 Draw.FillColor = Color.White;
                 Draw.Rectangle(new Vector2(200, 300), new Vector2(400, 250));
+                //set players platforms
                 foreach (Platforms platform in playerPlatforms)
                 {
                     platform.Update();
                 };
+                //attack logic (empty till enemy)
                 foreach (Platforms platform in attackPlatforms)
                 {
                     platform.Update();
                 };
-                Character.update(playerPlatforms);
+                //player
+                Character.update(playerPlatforms, attackPlatforms);
+                //enemy type
+                happyEnemy.update();
             }
             if (levelThree)
             {
+                //player area
                 Draw.FillColor = Color.White;
                 Draw.Rectangle(new Vector2(200, 300), new Vector2(400, 250));
+                //set players platforms
                 foreach (Platforms platform in playerPlatforms)
                 {
                     platform.Update();
                 };
+                //attack logic (empty till enemy)
                 foreach (Platforms platform in attackPlatforms)
                 {
                     platform.Update();
                 };
+                //player
+                Character.update(playerPlatforms, attackPlatforms);
+                //enemy type
+                sadEnemy.update();
             }
         }
     }

@@ -108,7 +108,7 @@ namespace MohawkGame2D
             }
             
         }
-        public void Collision(List<Platforms> playerPlatforms)
+        public void Collision(List<Platforms> playerPlatforms, List<Platforms> attackPlatforms)
         {
             isGrounded = false;
 
@@ -166,6 +166,61 @@ namespace MohawkGame2D
                     velocity.Y = 0;
                 }
             }
+            //go back and fix if I have time
+            foreach (Platforms platform in attackPlatforms)
+            {
+                float playerLeft = x;
+                float playerRight = x + width;
+                float playerTop = y;
+                float playerBottom = y + height;
+
+                float platLeft = platform.x;
+                float platRight = platform.x + platform.width;
+                float platTop = platform.y;
+                float platBottom = platform.y + platform.height;
+
+                bool overlap = playerRight > platLeft && playerLeft < platRight &&
+                               playerBottom > platTop && playerTop < platBottom;
+                if (overlap)
+                {
+                    float fromTop = playerBottom - platTop;
+                    float fromBottom = platBottom - playerTop;
+                    float fromLeft = playerRight - platLeft;
+                    float fromRight = platRight - playerLeft;
+                    bool isVerticalCollision = fromTop < fromLeft && fromTop < fromRight || fromBottom < fromLeft && fromBottom < fromRight;
+
+
+                    if (fromTop < fromLeft && fromTop < fromRight && velocity.Y > 0)
+                    {
+                        y -= fromTop;
+                        velocity.Y = 0;
+                        isGrounded = true;
+                        x += platform.speed.X * Time.DeltaTime;
+                    }
+                    else if (fromBottom < fromLeft && fromBottom < fromRight && velocity.Y < 0)
+                    {
+                        y += fromBottom;
+                        velocity.Y = 0;
+                    }
+                    else if (!isVerticalCollision)
+                    {
+                        if (fromLeft < fromRight)
+                            x -= fromLeft;
+                        else
+                            x += fromRight;
+                        velocity.X = 0;
+                    }
+
+                }
+                if (playerTop <= 300 || playerBottom >= 550 || platRight >= 600 || playerLeft <= 200)
+                {
+                    x = 390;
+                    y = 420;
+                    currentHealth -= 1;
+                    velocity.X = 0;
+                    velocity.Y = 0;
+                }
+            }
         }
         public void health()
         {
@@ -181,12 +236,12 @@ namespace MohawkGame2D
             }
             
         }
-        public void update(List<Platforms> playerPlatforms)
+        public void update(List<Platforms> playerPlatforms, List<Platforms> attackPlatforms)
         {
             health();
             simGravity();
             drawPlayer();
-            Collision(playerPlatforms);
+            Collision(playerPlatforms, attackPlatforms);
         }
     }
 }

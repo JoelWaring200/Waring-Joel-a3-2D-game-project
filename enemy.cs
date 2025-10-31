@@ -22,7 +22,8 @@ namespace MohawkGame2D
         bool happy;
         bool start = false;
         bool isAttacking = false;
-        public Enemy(float x, float y, float width, float height, int health, Color color, bool sad, bool bland, bool happy)
+        int attackAmount;
+        public Enemy(float x, float y, float width, float height, int health, int attackAmount, Color color, bool sad, bool bland, bool happy)
         {
             this.x = x;
             this.y = y;
@@ -98,15 +99,19 @@ namespace MohawkGame2D
         }
         public void attackhaddling()
         {
-            if (Input.IsKeyboardKeyPressed(KeyboardInput.W) && start == true || Input.IsKeyboardKeyPressed(KeyboardInput.Space) && start == true)
+            if (Input.IsKeyboardKeyPressed(KeyboardInput.W) && start|| Input.IsKeyboardKeyPressed(KeyboardInput.Space) && start)
             {
                 isAttacking = true;
                 start = false;
             }
 
-            if (isAttacking == true)
+            if (isAttacking)
             {
                 
+            }
+            if (!isAttacking && !start)
+            {
+
             }
         }
         public void health()

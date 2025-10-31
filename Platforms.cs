@@ -8,16 +8,16 @@ using System.Threading.Tasks;
 
 namespace MohawkGame2D
 {
-    internal class Platforms
+    public class Platforms
     {
-        float x;
-        float y;
-        int width;
-        int height;
+        public float x;
+        public float y;
+        public int width;
+        public int height;
         Color color;
         Vector2 Start;
         Vector2 End;
-        Vector2 speed;
+        public Vector2 speed;
         bool forwardX;
         bool forwardY;
         public Platforms(float x, float y, int width, int height, Color color, Vector2 Start, Vector2 End, Vector2 speed) 

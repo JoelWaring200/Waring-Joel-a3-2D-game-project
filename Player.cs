@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 using System.Numerics;
 
 namespace MohawkGame2D
@@ -93,7 +95,7 @@ namespace MohawkGame2D
             //player movement
             if (Input.IsKeyboardKeyPressed(KeyboardInput.W) && isGrounded || Input.IsKeyboardKeyPressed(KeyboardInput.Space) && isGrounded)
             {
-                velocity.Y -= movementSpeed * 200;
+                velocity.Y -= movementSpeed * 150;
                 isGrounded = false;
             }
             if (Input.IsKeyboardKeyDown(KeyboardInput.A) || Input.IsKeyboardKeyDown(KeyboardInput.Left))
@@ -106,17 +108,67 @@ namespace MohawkGame2D
             }
             
         }
+        public void Collision(List<Platforms> playerPlatforms)
+        {
+            isGrounded = false;
+
+            foreach (Platforms platform in playerPlatforms)
+            {
+                float playerLeft = x;
+                float playerRight = x + width;
+                float playerTop = y;
+                float playerBottom = y + height;
+
+                float platLeft = platform.x;
+                float platRight = platform.x + platform.width;
+                float platTop = platform.y;
+                float platBottom = platform.y + platform.height;
+
+                bool overlap = playerRight > platLeft && playerLeft < platRight &&
+                               playerBottom > platTop && playerTop < platBottom;
+                if (overlap)
+                {
+                    float fromTop = playerBottom - platTop;
+                    float fromBottom = platBottom - playerTop;
+                    float fromLeft = playerRight - platLeft;
+                    float fromRight = platRight - playerLeft;
+                    bool isVerticalCollision = fromTop < fromLeft && fromTop < fromRight || fromBottom < fromLeft && fromBottom < fromRight;
+
+
+                    if (fromTop < fromLeft && fromTop < fromRight && velocity.Y > 0)
+                    {
+                        y -= fromTop;
+                        velocity.Y = 0;
+                        isGrounded = true;
+                        x += platform.speed.X * Time.DeltaTime;
+                    }
+                    else if (fromBottom < fromLeft && fromBottom < fromRight && velocity.Y < 0)
+                    {
+                        y += fromBottom;
+                        velocity.Y = 0;
+                    }
+                    else if (!isVerticalCollision) 
+                    {
+                        if (fromLeft < fromRight)
+                            x -= fromLeft;
+                        else
+                            x += fromRight;
+                        velocity.X = 0;
+                    }
+
+                }
+                if (playerTop <= 300 || playerBottom >= 550 || platRight >= 600 || playerLeft <= 200)
+                {
+                    x = 390;
+                    y = 420;
+                    currentHealth -= 1;
+                    velocity.X = 0;
+                    velocity.Y = 0;
+                }
+            }
+        }
         public void health()
         {
-            if(x + width >= 600 || x <= 200)
-            {
-                currentHealth -= 1;
-                x = 390;
-                y = 420;
-                velocity.Y = 0;
-                velocity.X = 0;
-
-            }
             for(int i = 0; i < maxHealth; i++)
             {
                 Draw.FillColor = Color.Gray;
@@ -127,13 +179,14 @@ namespace MohawkGame2D
                 Draw.FillColor = new Color(120, 6, 6, 255);
                 Draw.Rectangle(i * 40 + 20, 80, 30, 30);
             }
-            Console.WriteLine(currentHealth);
+            
         }
-        public void update()
+        public void update(List<Platforms> playerPlatforms)
         {
             health();
             simGravity();
             drawPlayer();
+            Collision(playerPlatforms);
         }
     }
 }

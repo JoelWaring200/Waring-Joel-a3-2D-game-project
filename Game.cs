@@ -49,9 +49,18 @@ namespace MohawkGame2D
         Button rulesRightArrowB = new Button(350, 500, 50, 50, "<-", 40, new Color(70, 130, 180, 255));
         Button rulesLeftArrowB = new Button(350, 400, 50, 50, "->", 40, new Color(70, 130, 180, 255));
         Button rulesSpaceB = new Button(250, 300, 150, 50, "Space", 40, new Color(70, 130, 180, 255));
-
+        //character creation
         Player Character = new Player(390, 420, 20, 20, 3, 2.0f);
-
+        // enemy Creation
+        Enemy sadEnemy = new Enemy(300, 50, 200, 200, 3, Color.Green, true, false, false);
+        //characters "stand"
+        List<Platforms> playerPlatforms = new List<Platforms>
+            {
+                new Platforms(390, 450, 20, 30, new Color(70, 130, 180, 255), new Vector2(390, 450), new Vector2(0, 0), new Vector2(0, 0)),
+                 new Platforms(390, 490, 20, 30, new Color(70, 130, 180, 255), new Vector2(390, 520), new Vector2(0, 0), new Vector2(0, 0)),
+            };
+        //attack handling
+        List<Platforms> attackPlatforms = new List<Platforms> { };
         Platforms test = new Platforms(20, 20, 20, 20, new Color(70, 130, 180, 255), new Vector2(20, 20), new Vector2(400, 20), new Vector2(10, 0));
         /// <summary>
         ///     Setup runs once before the game loop begins.
@@ -59,7 +68,7 @@ namespace MohawkGame2D
         public void Setup()
         {
             Window.SetSize(Width, Height);
-           
+            
         }
 
         /// <summary>
@@ -218,17 +227,43 @@ namespace MohawkGame2D
             {
                 Draw.FillColor = Color.White;
                 Draw.Rectangle(new Vector2(200, 300), new Vector2(400, 250));
-                Character.update();
+                foreach(Platforms platform in playerPlatforms)
+                {
+                    platform.Update();
+                };
+                foreach (Platforms platform in attackPlatforms)
+                {
+                    platform.Update();
+                };
+                Character.update(playerPlatforms);
+                sadEnemy.update();
             }
             if (levelTwo)
             {
                 Draw.FillColor = Color.White;
                 Draw.Rectangle(new Vector2(200, 300), new Vector2(400, 250));
+                foreach (Platforms platform in playerPlatforms)
+                {
+                    platform.Update();
+                };
+                foreach (Platforms platform in attackPlatforms)
+                {
+                    platform.Update();
+                };
+                Character.update(playerPlatforms);
             }
             if (levelThree)
             {
                 Draw.FillColor = Color.White;
                 Draw.Rectangle(new Vector2(200, 300), new Vector2(400, 250));
+                foreach (Platforms platform in playerPlatforms)
+                {
+                    platform.Update();
+                };
+                foreach (Platforms platform in attackPlatforms)
+                {
+                    platform.Update();
+                };
             }
         }
     }

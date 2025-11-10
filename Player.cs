@@ -65,6 +65,23 @@ namespace MohawkGame2D
             Draw.Circle(eyeCenterLeft.X + leftPupilOffset.X, eyeCenterLeft.Y + leftPupilOffset.Y, pupilRadius);
             Draw.Circle(eyeCenterRight.X + rightPupilOffset.X, eyeCenterRight.Y + rightPupilOffset.Y, pupilRadius);
         }
+        public void movement()
+        {
+            //player movement
+            if (Input.IsKeyboardKeyPressed(KeyboardInput.W) && isGrounded || Input.IsKeyboardKeyPressed(KeyboardInput.Space) && isGrounded)
+            {
+                velocity.Y -= movementSpeed * 150;
+                isGrounded = false;
+            }
+            if (Input.IsKeyboardKeyDown(KeyboardInput.A) || Input.IsKeyboardKeyDown(KeyboardInput.Left))
+            {
+                x -= movementSpeed;
+            }
+            if (Input.IsKeyboardKeyDown(KeyboardInput.D) || Input.IsKeyboardKeyDown(KeyboardInput.Right))
+            {
+                x += movementSpeed;
+            }
+        }
 
         public void simGravity()
         {
@@ -73,8 +90,9 @@ namespace MohawkGame2D
 
             // Update position
             y += velocity.Y * Time.DeltaTime;
-            x += velocity.X * Time.DeltaTime;
-
+        }
+        public void Collision(List<Platforms> playerPlatforms, List<Platforms> attackPlatforms)
+        {
             //place holder will change to interact with platform class
             if (y + height > groundY)
             {
@@ -92,24 +110,7 @@ namespace MohawkGame2D
                 x = 200;
                 velocity.X = 0;
             }
-            //player movement
-            if (Input.IsKeyboardKeyPressed(KeyboardInput.W) && isGrounded || Input.IsKeyboardKeyPressed(KeyboardInput.Space) && isGrounded)
-            {
-                velocity.Y -= movementSpeed * 150;
-                isGrounded = false;
-            }
-            if (Input.IsKeyboardKeyDown(KeyboardInput.A) || Input.IsKeyboardKeyDown(KeyboardInput.Left))
-            {
-                velocity.X -= movementSpeed;
-            }
-            if (Input.IsKeyboardKeyDown(KeyboardInput.D) || Input.IsKeyboardKeyDown(KeyboardInput.Right))
-            {
-                velocity.X += movementSpeed;
-            }
-            
-        }
-        public void Collision(List<Platforms> playerPlatforms, List<Platforms> attackPlatforms)
-        {
+            //platforms
             isGrounded = false;
 
             foreach (Platforms platform in playerPlatforms)
@@ -242,6 +243,7 @@ namespace MohawkGame2D
             simGravity();
             drawPlayer();
             Collision(playerPlatforms, attackPlatforms);
+            movement();
         }
     }
 }

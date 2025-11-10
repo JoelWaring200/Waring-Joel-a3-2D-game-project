@@ -2,6 +2,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Numerics;
 using System.Security.Cryptography.X509Certificates;
 
@@ -25,9 +26,11 @@ namespace MohawkGame2D
         bool levelOne = false;
         bool levelTwo = false;
         bool levelThree = false;
+
         //checking level locks
         bool levelOneWon = false;
         bool levelTwoWon = false;
+
         //buttons
         Button playButton = new Button(300, 400, 200, 50, "Play", 36, new Color(70, 130, 180, 255));
         Button rulesButton = new Button(350, 500, 100, 50, "rules", 36, new Color(70, 130, 180, 255));
@@ -35,25 +38,31 @@ namespace MohawkGame2D
         Button levelOneButton = new Button(50, 250, 200, 200, "ONE", 50, new Color(70, 130, 180, 255));
         Button levelTwoButton = new Button(300, 250, 200, 200, "TWO", 50, new Color(70, 130, 180, 255));
         Button levelThreeButton = new Button(550, 250, 200, 200, "THREE", 50, new Color(70, 130, 180, 255));
-        //fake buttons for rules
-        Button rulesW = new Button(150, 150, 50, 50, "W", 40, new Color(70, 130, 180, 255));
-        Button rulesA = new Button(100, 200, 50, 50, "A", 40, new Color(70, 130, 180, 255));
-        Button rulesD = new Button(200, 200, 50, 50, "D", 40, new Color(70, 130, 180, 255));
-        Button rulesWB = new Button(100, 300, 50, 50, "W", 40, new Color(70, 130, 180, 255));
-        Button rulesAB = new Button(100, 400, 50, 50, "A", 40, new Color(70, 130, 180, 255));
-        Button rulesDB = new Button(100, 500, 50, 50, "D", 40, new Color(70, 130, 180, 255));
 
-        Button rulesRightArrow = new Button(350, 150, 50, 50, "<-", 40, new Color(70, 130, 180, 255));
-        Button rulesLeftArrow = new Button(450, 150, 50, 50, "->", 40, new Color(70, 130, 180, 255));
-        Button rulesSpace = new Button(350, 200, 150, 50, "Space", 40, new Color(70, 130, 180, 255));
-        Button rulesRightArrowB = new Button(350, 500, 50, 50, "<-", 40, new Color(70, 130, 180, 255));
-        Button rulesLeftArrowB = new Button(350, 400, 50, 50, "->", 40, new Color(70, 130, 180, 255));
-        Button rulesSpaceB = new Button(250, 300, 150, 50, "Space", 40, new Color(70, 130, 180, 255));
+        //fake buttons for rules
+        Button[] fakeButtons = new Button[]
+                {
+                    new Button(150, 150, 50, 50, "W", 40, new Color(70, 130, 180, 255)),
+                    new Button(100, 200, 50, 50, "A", 40, new Color(70, 130, 180, 255)),
+                    new Button(200, 200, 50, 50, "D", 40, new Color(70, 130, 180, 255)),
+                    new Button(100, 300, 50, 50, "W", 40, new Color(70, 130, 180, 255)),
+                    new Button(100, 400, 50, 50, "A", 40, new Color(70, 130, 180, 255)),
+                    new Button(100, 500, 50, 50, "D", 40, new Color(70, 130, 180, 255)),
+                    new Button(350, 150, 50, 50, "<-", 40, new Color(70, 130, 180, 255)),
+                    new Button(450, 150, 50, 50, "->", 40, new Color(70, 130, 180, 255)),
+                    new Button(350, 200, 150, 50, "Space", 40, new Color(70, 130, 180, 255)),
+                    new Button(350, 500, 50, 50, "<-", 40, new Color(70, 130, 180, 255)),
+                    new Button(350, 400, 50, 50, "->", 40, new Color(70, 130, 180, 255)),
+                    new Button(250, 300, 150, 50, "Space", 40, new Color(70, 130, 180, 255))
+                };
+
+
         //character creation
         Player Character = new Player(390, 420, 20, 20, 3, 2.0f);
+
         // enemy Creation
-        Enemy blandEnemy = new Enemy(300, 50, 200, 200, 3, 3, Color.Green, false, false, true);
-        Enemy happyEnemy = new Enemy(300, 50, 200, 200, 3, 5, Color.Green, false, true, false);
+        Enemy blandEnemy = new Enemy(300, 50, 200, 200, 3, 3, Color.Green, false, true, false);
+        Enemy happyEnemy = new Enemy(300, 50, 200, 200, 3, 5, Color.Green, false, false, true);
         Enemy sadEnemy = new Enemy(300, 50, 200, 200, 3, 7, Color.Green, true, false, false);
         //characters "stand"
         List<Platforms> playerPlatforms = new List<Platforms>
@@ -63,13 +72,13 @@ namespace MohawkGame2D
             };
         //attack handling
         List<Platforms> attackPlatforms = new List<Platforms> { };
-        Platforms test = new Platforms(20, 20, 20, 20, new Color(70, 130, 180, 255), new Vector2(20, 20), new Vector2(400, 20), new Vector2(10, 0));
         /// <summary>
         ///     Setup runs once before the game loop begins.
         /// </summary>
         public void Setup()
         {
             Window.SetSize(Width, Height);
+            
         }
 
         /// <summary>
@@ -94,9 +103,11 @@ namespace MohawkGame2D
                 Text.Size = 70;
                 Text.Color = Color.White;
                 Text.Draw("Square Fighter", new Vector2(150, 150));
+
                 //buttons
                 playButton.drawButton(mousePos);
                 rulesButton.drawButton(mousePos);
+
                 //tracking button clicks
                 if (playButton.clicked(mousePos))
                 {
@@ -115,6 +126,7 @@ namespace MohawkGame2D
                 Text.Size = 70;
                 Text.Color = Color.White;
                 Text.Draw("Rules", new Vector2(305, 50));
+
                 //buttons
                 backButton.drawButton(mousePos);
 
@@ -124,8 +136,8 @@ namespace MohawkGame2D
                     titleScreen = true;
                     rulesScreen = false;
                 }
-
                 //writing out rules
+
                 //movement
                 Text.Size = 30;
                 Text.Draw("movement", new Vector2(100, 120));
@@ -135,24 +147,17 @@ namespace MohawkGame2D
                 Draw.Line(new Vector2(520, 570), new Vector2(520, 130));
                 Draw.Line(new Vector2(250, 130), new Vector2(520, 130));
                 Draw.Line(new Vector2(70, 130), new Vector2(90, 130));
-                rulesW.drawButton(mousePos);
-                rulesA.drawButton(mousePos);
-                rulesD.drawButton(mousePos);
-                rulesRightArrow.drawButton(mousePos);
-                rulesLeftArrow.drawButton(mousePos);
-                rulesSpace.drawButton(mousePos);
-                rulesWB.drawButton(mousePos);
+                for(int button = 0; button < fakeButtons.Length; button++)
+                {
+                    fakeButtons[button].drawButton(mousePos);
+                }
                 Text.Draw("UP", new Vector2(160, 315));
-                rulesAB.drawButton(mousePos);
                 Text.Draw("LEFT", new Vector2(160, 415));
-                rulesDB.drawButton(mousePos);
                 Text.Draw("RIGHT", new Vector2(160, 515));
-                rulesRightArrowB.drawButton(mousePos);
                 Text.Draw("RIGHT", new Vector2(410, 415));
-                rulesLeftArrowB.drawButton(mousePos);
                 Text.Draw("LEFT", new Vector2(410, 515));
-                rulesSpaceB.drawButton(mousePos);
                 Text.Draw("UP", new Vector2(410, 315));
+
                 //Goal
                 Text.Draw("Goal", new Vector2(600, 120));
                 Text.Size = 20;
@@ -164,6 +169,7 @@ namespace MohawkGame2D
                 Draw.Line(new Vector2(790, 260), new Vector2(790, 130));
                 Draw.Line(new Vector2(790, 130), new Vector2(700, 130));
                 Draw.Line(new Vector2(530, 130), new Vector2(590, 130));
+
                 //story
                 Text.Size = 30;
                 Text.Draw("Story", new Vector2(600, 270));

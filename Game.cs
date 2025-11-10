@@ -121,8 +121,10 @@ namespace MohawkGame2D
             }
             if (Character.currentHealth <= 0)
             {
-                //loss screen
-                Console.WriteLine("you lost");
+                Window.ClearBackground(Color.Red);
+                Text.Color = Color.Black;
+                Text.Size = 50;
+                Text.Draw("you lose", 300, 250);
             }
         }
         void TitleScreen(Vector2 mousePos)
@@ -466,14 +468,27 @@ namespace MohawkGame2D
                 if(enemysSpared >= 3)
                 {
                     Window.ClearBackground(Color.Green);
+                    Text.Color = Color.Black;
+                    Text.Size = 50;
+                    Text.Draw("you were", 300, 250);
+                    Text.Draw("merciful", 300, 250);
+
                 }
                 else if(enemysKilled >= 3)
                 {
                     Window.ClearBackground(Color.Red);
+                    Text.Color = Color.Black;
+                    Text.Size = 50;
+                    Text.Draw("you were", 300, 250);
+                    Text.Draw("a Monster", 300, 250);
                 }
                 else
                 {
                     Window.ClearBackground(Color.Gray);
+                    Text.Color = Color.Black;
+                    Text.Size = 50;
+                    Text.Draw("you couldnt", 300, 250);
+                    Text.Draw("decide", 300, 250);
                 }
             }
         }

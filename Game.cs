@@ -20,65 +20,84 @@ namespace MohawkGame2D
         int Height = 600;
 
         //game states
-        bool titleScreen = true;
-        bool rulesScreen = false;
-        bool levelsScreen = false;
-        bool levelOne = false;
-        bool levelTwo = false;
-        bool levelThree = false;
+        bool titleScreen;
+        bool rulesScreen;
+        bool levelsScreen;
+        bool levelOne;
+        bool levelTwo;
+        bool levelThree;
+        bool endScreen;
 
         //checking level locks
-        bool levelOneWon = false;
-        bool levelTwoWon = false;
+        bool levelOneWon;
+        bool levelTwoWon;
+
+        //checking player actions to decide what ending
+        int enemysSpared = 0;
+        int enemysKilled = 0;
+
+        bool lastOption = false;
 
         //buttons
-        Button playButton = new Button(300, 400, 200, 50, "Play", 36, new Color(70, 130, 180, 255));
-        Button rulesButton = new Button(350, 500, 100, 50, "rules", 36, new Color(70, 130, 180, 255));
-        Button backButton = new Button(50, 50, 100, 50, "back", 38, new Color(120, 6, 6, 255));
-        Button levelOneButton = new Button(50, 250, 200, 200, "ONE", 50, new Color(70, 130, 180, 255));
-        Button levelTwoButton = new Button(300, 250, 200, 200, "TWO", 50, new Color(70, 130, 180, 255));
-        Button levelThreeButton = new Button(550, 250, 200, 200, "THREE", 50, new Color(70, 130, 180, 255));
+        Button playButton = new Button(300, 400, 200, 50, "Play", 36, new Color(70, 130, 180, 255), true);
+        Button rulesButton = new Button(350, 500, 100, 50, "rules", 36, new Color(70, 130, 180, 255), true);
+        Button backButton = new Button(50, 50, 100, 50, "back", 38, new Color(120, 6, 6, 255), true);
+        Button levelOneButton = new Button(50, 150, 200, 200, "ONE", 50, new Color(70, 130, 180, 255), true);
+        Button levelTwoButton = new Button(300, 150, 200, 200, "TWO", 50, new Color(70, 130, 180, 255), true);
+        Button levelThreeButton = new Button(550, 150, 200, 200, "THREE", 50, new Color(70, 130, 180, 255), true);
 
         //fake buttons for rules
-        Button[] fakeButtons = new Button[]
-                {
-                    new Button(150, 150, 50, 50, "W", 40, new Color(70, 130, 180, 255)),
-                    new Button(100, 200, 50, 50, "A", 40, new Color(70, 130, 180, 255)),
-                    new Button(200, 200, 50, 50, "D", 40, new Color(70, 130, 180, 255)),
-                    new Button(100, 300, 50, 50, "W", 40, new Color(70, 130, 180, 255)),
-                    new Button(100, 400, 50, 50, "A", 40, new Color(70, 130, 180, 255)),
-                    new Button(100, 500, 50, 50, "D", 40, new Color(70, 130, 180, 255)),
-                    new Button(350, 150, 50, 50, "<-", 40, new Color(70, 130, 180, 255)),
-                    new Button(450, 150, 50, 50, "->", 40, new Color(70, 130, 180, 255)),
-                    new Button(350, 200, 150, 50, "Space", 40, new Color(70, 130, 180, 255)),
-                    new Button(350, 500, 50, 50, "<-", 40, new Color(70, 130, 180, 255)),
-                    new Button(350, 400, 50, 50, "->", 40, new Color(70, 130, 180, 255)),
-                    new Button(250, 300, 150, 50, "Space", 40, new Color(70, 130, 180, 255))
+        Button[] fakeButtons =
+                {   //          x y width height text font sise color interactable
+                    new Button(150, 150, 50, 50, "W", 40, new Color(70, 130, 180, 255), false),
+                    new Button(100, 200, 50, 50, "A", 40, new Color(70, 130, 180, 255), false),
+                    new Button(200, 200, 50, 50, "D", 40, new Color(70, 130, 180, 255), false),
+                    new Button(100, 300, 50, 50, "W", 40, new Color(70, 130, 180, 255), false),
+                    new Button(100, 400, 50, 50, "A", 40, new Color(70, 130, 180, 255), false),
+                    new Button(100, 500, 50, 50, "D", 40, new Color(70, 130, 180, 255), false),
+                    new Button(350, 150, 50, 50, "<-", 40, new Color(70, 130, 180, 255), false),
+                    new Button(450, 150, 50, 50, "->", 40, new Color(70, 130, 180, 255), false),
+                    new Button(350, 200, 150, 50, "Space", 40, new Color(70, 130, 180, 255), false),
+                    new Button(350, 500, 50, 50, "->", 40, new Color(70, 130, 180, 255), false),
+                    new Button(350, 400, 50, 50, "<-", 40, new Color(70, 130, 180, 255), false),
+                    new Button(250, 300, 150, 50, "Space", 40, new Color(70, 130, 180, 255), false)
                 };
-
 
         //character creation
         Player Character = new Player(390, 420, 20, 20, 3, 2.0f);
 
         // enemy Creation
-        Enemy blandEnemy = new Enemy(300, 50, 200, 200, 3, 3, Color.Green, false, true, false);
-        Enemy happyEnemy = new Enemy(300, 50, 200, 200, 3, 5, Color.Green, false, false, true);
-        Enemy sadEnemy = new Enemy(300, 50, 200, 200, 3, 7, Color.Green, true, false, false);
+        Enemy blandEnemy = new Enemy(300, 50, 200, 200, 3, Color.Green, false, true, false);
+        Enemy happyEnemy = new Enemy(300, 50, 200, 200, 3, Color.Yellow, false, false, true);
+        Enemy sadEnemy = new Enemy(300, 50, 200, 200, 3, Color.Red, true, false, false);
         //characters "stand"
         List<Platforms> playerPlatforms = new List<Platforms>
             {
-                new Platforms(390, 450, 20, 30, new Color(70, 130, 180, 255), new Vector2(390, 450), new Vector2(0, 0), new Vector2(0, 0)),
-                 new Platforms(390, 490, 20, 30, new Color(70, 130, 180, 255), new Vector2(390, 520), new Vector2(0, 0), new Vector2(0, 0)),
+                new Platforms(390, 450, 20, 30, new Color(70, 130, 180, 255), new Vector2(390, 450), new Vector2(0, 0), new Vector2(0, 0), false),
+                new Platforms(390, 490, 20, 30, new Color(70, 130, 180, 255), new Vector2(390, 520), new Vector2(0, 0), new Vector2(0, 0), false),
             };
         //attack handling
-        List<Platforms> attackPlatforms = new List<Platforms> { };
+        List<Platforms> attackPlatforms = new List<Platforms>
+        {
+
+        };
         /// <summary>
         ///     Setup runs once before the game loop begins.
         /// </summary>
         public void Setup()
         {
             Window.SetSize(Width, Height);
-            
+            titleScreen = true;
+            rulesScreen = false;
+            levelsScreen = false;
+            levelOne = false;
+            levelTwo = false;
+            levelThree = false;
+            endScreen = false;
+
+            //checking level locks
+            levelOneWon = false;
+            levelTwoWon = false;
         }
 
         /// <summary>
@@ -86,17 +105,28 @@ namespace MohawkGame2D
         /// </summary>
         public void Update()
         {
-            
-            //mouse pos
-            Vector2 mousePos = Input.GetMousePosition();
-            //drawing the screen
-            Window.ClearBackground(Color.Black);
-            GameStateControl();
-            
+            if (Character.currentHealth > 0)
+            {
+                //mouse pos
+                Vector2 mousePos = Input.GetMousePosition();
+                //drawing the screen
+                Window.ClearBackground(Color.Black);
+                TitleScreen(mousePos);
+                RulesScreen(mousePos);
+                LevelScreen(mousePos);
+                LevelOne(mousePos);
+                LevelTwo(mousePos);
+                LevelThree(mousePos);
+                EndScreen();
+            }
+            if (Character.currentHealth <= 0)
+            {
+                //loss screen
+                Console.WriteLine("you lost");
+            }
         }
-        void GameStateControl()
+        void TitleScreen(Vector2 mousePos)
         {
-            Vector2 mousePos = Input.GetMousePosition();
             if (titleScreen)
             {
                 //Title
@@ -120,6 +150,10 @@ namespace MohawkGame2D
                     titleScreen = false;
                 }
             }
+        }
+        //level handling
+        void RulesScreen(Vector2 mousePos)
+        {
             if (rulesScreen)
             {
                 //Title
@@ -147,15 +181,15 @@ namespace MohawkGame2D
                 Draw.Line(new Vector2(520, 570), new Vector2(520, 130));
                 Draw.Line(new Vector2(250, 130), new Vector2(520, 130));
                 Draw.Line(new Vector2(70, 130), new Vector2(90, 130));
-                for(int button = 0; button < fakeButtons.Length; button++)
+                for (int button = 0; button < fakeButtons.Length; button++)
                 {
                     fakeButtons[button].drawButton(mousePos);
                 }
                 Text.Draw("UP", new Vector2(160, 315));
                 Text.Draw("LEFT", new Vector2(160, 415));
                 Text.Draw("RIGHT", new Vector2(160, 515));
-                Text.Draw("RIGHT", new Vector2(410, 415));
-                Text.Draw("LEFT", new Vector2(410, 515));
+                Text.Draw("LEFT", new Vector2(410, 415));
+                Text.Draw("RIGHT", new Vector2(410, 515));
                 Text.Draw("UP", new Vector2(410, 315));
 
                 //Goal
@@ -189,8 +223,11 @@ namespace MohawkGame2D
                 Draw.Line(new Vector2(790, 570), new Vector2(790, 280));
                 Draw.Line(new Vector2(790, 280), new Vector2(700, 280));
                 Draw.Line(new Vector2(530, 280), new Vector2(590, 280));
-                
+
             }
+        }
+        void LevelScreen(Vector2 mousePos)
+        {
             if (levelsScreen)
             {
                 Draw.LineSize = 1;
@@ -204,20 +241,26 @@ namespace MohawkGame2D
                 levelOneButton.drawButton(mousePos);
                 levelTwoButton.drawButton(mousePos);
                 levelThreeButton.drawButton(mousePos);
-                if (levelOneButton.clicked(mousePos))
+                if (levelOneButton.clicked(mousePos) && levelOneWon == false)
                 {
                     levelsScreen = false;
                     levelOne = true;
                 }
-                if (levelTwoButton.clicked(mousePos) && levelOneWon == true)
+                if (levelTwoButton.clicked(mousePos) && levelOneWon == true && levelTwoWon == false)
                 {
                     levelsScreen = false;
                     levelTwo = true;
+                    Character.x = 390;
+                    Character.y = 420;
+
+
                 }
                 if (levelThreeButton.clicked(mousePos) && levelTwoWon == true)
                 {
                     levelsScreen = false;
                     levelThree = true;
+                    Character.x = 390;
+                    Character.y = 420;
                 }
                 //tracking button clicks
                 if (backButton.clicked(mousePos))
@@ -227,27 +270,10 @@ namespace MohawkGame2D
                 }
 
             }
+        }
+        void LevelOne(Vector2 mousePos)
+        {
             if (levelOne)
-            {
-                //player area
-                Draw.FillColor = Color.White;
-                Draw.Rectangle(new Vector2(200, 300), new Vector2(400, 250));
-                //set players platforms
-                foreach(Platforms platform in playerPlatforms)
-                {
-                    platform.Update();
-                };
-                //attack logic (empty till enemy)
-                foreach (Platforms platform in attackPlatforms)
-                {
-                    platform.Update();
-                };
-                //player
-                Character.update(playerPlatforms, attackPlatforms);
-                //enemy type
-                blandEnemy.update();
-            }
-            if (levelTwo)
             {
                 //player area
                 Draw.FillColor = Color.White;
@@ -257,16 +283,122 @@ namespace MohawkGame2D
                 {
                     platform.Update();
                 };
+
                 //attack logic (empty till enemy)
                 foreach (Platforms platform in attackPlatforms)
                 {
                     platform.Update();
                 };
+
                 //player
                 Character.update(playerPlatforms, attackPlatforms);
                 //enemy type
-                happyEnemy.update();
+                blandEnemy.update(attackPlatforms, mousePos, Character);
+                //removes attacks once they leave the play area
+                for (int a = 0; a < attackPlatforms.Count; a++)
+                {
+                    Platforms p = attackPlatforms[a];
+                    if (p.x < 200 && p.isforward == false || p.x > 600 && p.isforward == true || p.y < 300 && p.isforward == false || p.y > 550 && p.isforward == true)
+                    {
+                        attackPlatforms.RemoveAt(a);
+                    }
+                }
+                if (blandEnemy.currentEnemyHealth <= 0)
+                {
+                    // level two unlocks
+                    levelOneWon = true;
+                    lastOption = true;
+
+                    //player options
+                    Button playerOptionSpare = new Button(50, 200, 100, 100, "SPARE", 20, new Color(0, 100, 0), true);
+                    Button playerOptionKill = new Button(650, 200, 100, 100, "KILL", 20, new Color(100, 0, 0), true);
+
+                    //buttons
+                    playerOptionSpare.drawButton(mousePos);
+                    playerOptionKill.drawButton(mousePos);
+
+                    //tracking button clicks
+                    if (playerOptionSpare.clicked(mousePos))
+                    {
+                        titleScreen = true;
+                        enemysSpared += 1;
+                        levelOne = false;
+                    }
+                    if (playerOptionKill.clicked(mousePos))
+                    {
+                        titleScreen = true;
+                        enemysKilled += 1;
+                        levelOne = false;
+                    }
+                }
             }
+        }
+        void LevelTwo(Vector2 mousePos)
+        {
+            if (levelTwo)
+            {
+
+                //player area
+                Draw.FillColor = Color.White;
+                Draw.Rectangle(new Vector2(200, 300), new Vector2(400, 250));
+                //set players platforms
+                foreach (Platforms platform in playerPlatforms)
+                {
+                    platform.Update();
+                }
+                ;
+                //attack logic (empty till enemy)
+                foreach (Platforms platform in attackPlatforms)
+                {
+                    platform.Update();
+                }
+                ;
+
+                //player
+                Character.update(playerPlatforms, attackPlatforms);
+                //enemy type
+                happyEnemy.update(attackPlatforms, mousePos, Character);
+                //removes attacks once theyre outside play area
+                for (int a = 0; a < attackPlatforms.Count; a++)
+                {
+                    Platforms p = attackPlatforms[a];
+                    if (p.x < 200 && p.isforward == false || p.x > 600 && p.isforward == true || p.y < 300 && p.isforward == false || p.y > 550 && p.isforward == true)
+                    {
+                        attackPlatforms.RemoveAt(a);
+                    }
+                }
+                if (happyEnemy.currentEnemyHealth <= 0)
+                {
+                    // level two unlocks
+                    levelTwoWon = true;
+
+                    //player options
+                    Button playerOptionSpare = new Button(50, 200, 100, 100, "SPARE", 20, new Color(0, 100, 0), true);
+                    Button playerOptionKill = new Button(650, 200, 100, 100, "KILL", 20, new Color(100, 0, 0), true);
+
+                    //buttons
+                    playerOptionSpare.drawButton(mousePos);
+                    playerOptionKill.drawButton(mousePos);
+
+                    //tracking button clicks
+                    if (playerOptionSpare.clicked(mousePos))
+                    {
+                        titleScreen = true;
+                        enemysSpared += 1;
+                        levelTwo = false;
+                    }
+                    if (playerOptionKill.clicked(mousePos))
+                    {
+                        titleScreen = true;
+                        enemysKilled += 1;
+                        levelTwo = false;
+                    }
+                }
+            }
+        }
+        //fix this
+        void LevelThree(Vector2 mousePos)
+        {
             if (levelThree)
             {
                 //player area
@@ -276,19 +408,78 @@ namespace MohawkGame2D
                 foreach (Platforms platform in playerPlatforms)
                 {
                     platform.Update();
-                };
+                }
+                ;
+
                 //attack logic (empty till enemy)
                 foreach (Platforms platform in attackPlatforms)
                 {
                     platform.Update();
-                };
+                }
+                ;
+
                 //player
                 Character.update(playerPlatforms, attackPlatforms);
                 //enemy type
-                sadEnemy.update();
+                sadEnemy.update(attackPlatforms, mousePos, Character);
+                // removes attacks once outside play area
+                for (int a = 0; a < attackPlatforms.Count; a++)
+                {
+                    Platforms p = attackPlatforms[a];
+                    if (p.x < 200 && p.isforward == false || p.x > 600 && p.isforward == true || p.y < 300 && p.isforward == false || p.y > 550 && p.isforward == true)
+                    {
+                        attackPlatforms.RemoveAt(a);
+                    }
+                }
+                if (sadEnemy.currentEnemyHealth <= 0)
+                {
+                    // level two unlocks
+                    levelOneWon = true;
+                    lastOption = true;
+
+                    //player options
+                    Button playerOptionSpare = new Button(50, 200, 100, 100, "SPARE", 20, new Color(0, 100, 0), true);
+                    Button playerOptionKill = new Button(650, 200, 100, 100, "KILL", 20, new Color(100, 0, 0), true);
+
+                    //buttons
+                    playerOptionSpare.drawButton(mousePos);
+                    playerOptionKill.drawButton(mousePos);
+
+                    //tracking button clicks
+                    if (playerOptionSpare.clicked(mousePos))
+                    {
+                        endScreen = true;
+                        enemysSpared += 1;
+                        levelThree = false;
+                    }
+                    if (playerOptionKill.clicked(mousePos))
+                    {
+                        endScreen = true;
+                        enemysKilled += 1;
+                        levelThree = false;
+                    }
+                }
+            }
+        }
+        void EndScreen()
+        {
+            if (endScreen)
+            {
+                if(enemysSpared >= 3)
+                {
+                    Window.ClearBackground(Color.Green);
+                }
+                else if(enemysKilled >= 3)
+                {
+                    Window.ClearBackground(Color.Red);
+                }
+                else
+                {
+                    Window.ClearBackground(Color.Gray);
+                }
             }
         }
     }
-    
+
 }
-    
+

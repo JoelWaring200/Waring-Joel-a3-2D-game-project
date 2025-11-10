@@ -14,14 +14,15 @@ namespace MohawkGame2D
         public float y;
         public int width;
         public int height;
+        public Vector2 speed;
+        public bool isforward;
         Color color;
         Vector2 Start;
         Vector2 End;
-        public Vector2 speed;
-        bool forwardX;
-        bool forwardY;
-        public Platforms(float x, float y, int width, int height, Color color, Vector2 Start, Vector2 End, Vector2 speed) 
-        { 
+        
+        
+        public Platforms(float x, float y, int width, int height, Color color, Vector2 Start, Vector2 End, Vector2 speed, bool isforward)
+        {
             this.x = x;
             this.y = y;
             this.width = width;
@@ -30,9 +31,9 @@ namespace MohawkGame2D
             this.Start = Start;
             this.End = End;
             this.speed = speed;
-            forwardX = true;
-            forwardY = true;
+            this.isforward = isforward;
         }
+        //draws the platforms
         public void DrawRec()
         {
             Draw.FillColor = color;
@@ -40,54 +41,28 @@ namespace MohawkGame2D
         }
         public void MoveRec()
         {
-            
-            if (forwardX)
+            // X movement
+            if (isforward)
             {
-                if (x + width < End.X)
-                {
-                    x += speed.X;
-                }
-                if (x + width >= End.X)
-                {
-                    forwardX = false;
-                    x = End.X - width; 
-                }
+                if (x < End.X) x += speed.X;
+                else x = End.X;
             }
-            if (forwardY)
+            else
             {
-                if (y + height < End.Y)
-                {
-                    y += speed.Y;
-                }
-                if (y + height >= End.Y)
-                {
-                    forwardY = false;
-                    y = End.Y - height;
-                }
+                if (x > Start.X) x -= speed.X;
+                else x = Start.X;
             }
-            if (!forwardX)
+
+            // Y movement
+            if (isforward)
             {
-                if (x > Start.X)
-                {
-                    x -= speed.X;
-                }
-                if (x <= Start.X)
-                {
-                    forwardX = true;
-                    x = Start.X;
-                }
+                if (y < End.Y) y += speed.Y;
+                else y = End.Y;
             }
-            if (!forwardY)
+            else
             {
-                if (y > Start.Y)
-                {
-                    y -= speed.Y;
-                }
-                if (y <= Start.Y)
-                {
-                    forwardY = true;
-                    y = Start.Y;
-                }
+                if (y > Start.Y) y -= speed.Y;
+                else y = Start.Y;
             }
 
         }

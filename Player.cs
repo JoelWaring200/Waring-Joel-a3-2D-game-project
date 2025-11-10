@@ -7,12 +7,12 @@ namespace MohawkGame2D
 {
     public class Player
     {
-        float x; // changed to float
-        float y; // changed to float
+        public float x;
+        public float y; 
         float width;
         float height;
-        int maxHealth;
-        int currentHealth;
+        public int maxHealth;
+        public int currentHealth;
         float movementSpeed;
 
         private Vector2 velocity;
@@ -35,9 +35,10 @@ namespace MohawkGame2D
             this.gravity = new Vector2(0, 500f);
             this.isGrounded = false;
         }
-
+        //draws player
         public void drawPlayer()
         {
+            //eyes that track mouse
             float eyeRadius = width / 4.0f;
             float pupilRadius = eyeRadius / 2.0f;
 
@@ -93,7 +94,7 @@ namespace MohawkGame2D
         }
         public void Collision(List<Platforms> playerPlatforms, List<Platforms> attackPlatforms)
         {
-            //place holder will change to interact with platform class
+            //tracks edge of player area collision
             if (y + height > groundY)
             {
                 y = groundY - height;
@@ -109,17 +110,17 @@ namespace MohawkGame2D
             {
                 x = 200;
                 velocity.X = 0;
-            }
-            //platforms
+            } 
+            //platforms collision
             isGrounded = false;
+
+            float playerLeft = x;
+            float playerRight = x + width;
+            float playerTop = y;
+            float playerBottom = y + height;
 
             foreach (Platforms platform in playerPlatforms)
             {
-                float playerLeft = x;
-                float playerRight = x + width;
-                float playerTop = y;
-                float playerBottom = y + height;
-
                 float platLeft = platform.x;
                 float platRight = platform.x + platform.width;
                 float platTop = platform.y;
@@ -129,13 +130,14 @@ namespace MohawkGame2D
                                playerBottom > platTop && playerTop < platBottom;
                 if (overlap)
                 {
+                    // tracks if the platforms colliding
                     float fromTop = playerBottom - platTop;
                     float fromBottom = platBottom - playerTop;
                     float fromLeft = playerRight - platLeft;
                     float fromRight = platRight - playerLeft;
                     bool isVerticalCollision = fromTop < fromLeft && fromTop < fromRight || fromBottom < fromLeft && fromBottom < fromRight;
 
-
+                    // top collision
                     if (fromTop < fromLeft && fromTop < fromRight && velocity.Y > 0)
                     {
                         y -= fromTop;
@@ -143,11 +145,13 @@ namespace MohawkGame2D
                         isGrounded = true;
                         x += platform.speed.X * Time.DeltaTime;
                     }
+                    // bottom collision
                     else if (fromBottom < fromLeft && fromBottom < fromRight && velocity.Y < 0)
                     {
                         y += fromBottom;
                         velocity.Y = 0;
                     }
+                    // side collision
                     else if (!isVerticalCollision) 
                     {
                         if (fromLeft < fromRight)
@@ -158,22 +162,10 @@ namespace MohawkGame2D
                     }
 
                 }
-                if (playerTop <= 300 || playerBottom >= 550 || platRight >= 600 || playerLeft <= 200)
-                {
-                    x = 390;
-                    y = 420;
-                    currentHealth -= 1;
-                    velocity.X = 0;
-                    velocity.Y = 0;
-                }
             }
-            //go back and fix if I have time
+            //does the same thing again
             foreach (Platforms platform in attackPlatforms)
             {
-                float playerLeft = x;
-                float playerRight = x + width;
-                float playerTop = y;
-                float playerBottom = y + height;
 
                 float platLeft = platform.x;
                 float platRight = platform.x + platform.width;
@@ -213,16 +205,18 @@ namespace MohawkGame2D
                     }
 
                 }
-                if (playerTop <= 300 || playerBottom >= 550 || platRight >= 600 || playerLeft <= 200)
-                {
-                    x = 390;
-                    y = 420;
-                    currentHealth -= 1;
-                    velocity.X = 0;
-                    velocity.Y = 0;
-                }
+                
+            }
+            if (playerTop <= 300 || playerBottom >= 550 || playerRight >= 600 || playerLeft <= 200)
+            {
+                x = 390;
+                y = 420;
+                currentHealth -= 1;
+                velocity.X = 0;
+                velocity.Y = 0;
             }
         }
+        //draws health
         public void health()
         {
             for(int i = 0; i < maxHealth; i++)

@@ -26,7 +26,7 @@ namespace MohawkGame2D
         int attackAmount;
         int attackAllowedAmount;
         Color atkColor;
-        int atkSpeed;
+        float atkSpeed;
         int attacktypes;
         public Enemy(float x, float y, float width, float height, int health, Color color, bool sad, bool bland, bool happy)
         {
@@ -71,7 +71,7 @@ namespace MohawkGame2D
                 attackAllowedAmount = 7;
                 //sets attack speeds and color
                 atkColor = Color.Red;
-                atkSpeed = 4;
+                atkSpeed = 3.5f;
                 attacktypes = 4;
             }
             

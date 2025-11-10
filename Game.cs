@@ -64,7 +64,7 @@ namespace MohawkGame2D
                 };
 
         //character creation
-        Player Character = new Player(390, 420, 20, 20, 3, 2.0f);
+        Player Character = new Player(390, 420, 20, 20, 5, 2.0f);
 
         // enemy Creation
         Enemy blandEnemy = new Enemy(300, 50, 200, 200, 3, Color.Green, false, true, false);
@@ -74,7 +74,7 @@ namespace MohawkGame2D
         List<Platforms> playerPlatforms = new List<Platforms>
             {
                 new Platforms(390, 450, 20, 30, new Color(70, 130, 180, 255), new Vector2(390, 450), new Vector2(0, 0), new Vector2(0, 0), false),
-                new Platforms(390, 490, 20, 30, new Color(70, 130, 180, 255), new Vector2(390, 520), new Vector2(0, 0), new Vector2(0, 0), false),
+                new Platforms(390, 520, 20, 30, new Color(70, 130, 180, 255), new Vector2(390, 520), new Vector2(0, 0), new Vector2(0, 0), false),
             };
         //attack handling
         List<Platforms> attackPlatforms = new List<Platforms>
@@ -252,8 +252,6 @@ namespace MohawkGame2D
                     levelTwo = true;
                     Character.x = 390;
                     Character.y = 420;
-
-
                 }
                 if (levelThreeButton.clicked(mousePos) && levelTwoWon == true)
                 {

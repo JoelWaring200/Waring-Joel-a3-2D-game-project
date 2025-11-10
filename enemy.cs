@@ -27,6 +27,7 @@ namespace MohawkGame2D
         int attackAllowedAmount;
         Color atkColor;
         int atkSpeed;
+        int attacktypes;
         public Enemy(float x, float y, float width, float height, int health, Color color, bool sad, bool bland, bool happy)
         {
             this.x = x;
@@ -70,7 +71,8 @@ namespace MohawkGame2D
                 attackAllowedAmount = 7;
                 //sets attack speeds and color
                 atkColor = Color.Red;
-                atkSpeed = 8;
+                atkSpeed = 4;
+                attacktypes = 4;
             }
             
             
@@ -96,7 +98,8 @@ namespace MohawkGame2D
                 attackAllowedAmount = 5;
                 //sets attack speeds and color
                 atkColor = Color.Yellow;
-                atkSpeed = 6;
+                atkSpeed = 3;
+                attacktypes = 3;
 
             }
             if(this.bland)
@@ -115,7 +118,8 @@ namespace MohawkGame2D
                 attackAllowedAmount = 3;
                 //sets attack speeds and color
                 atkColor = Color.Green;
-                atkSpeed = 4;
+                atkSpeed = 2;
+                attacktypes = 1;
             }
         }
         public void attackhaddling(List<Platforms> attackPlatforms, Vector2 mousePos, Player Character)
@@ -141,42 +145,39 @@ namespace MohawkGame2D
                     if (attackPlatforms.Count <= 0)
                     {
                         //decide attack type
-                        int attackType = rand.Next(1, 4);
+                        int attackType = rand.Next(1, attacktypes);
                         //what number of attacks the player has deltwith
                         attackAmount++;
-                        
+
+                        // Draw.Rectangle(new Vector2(200, 300), new Vector2(400, 250));
                         //attack types
                         if (attackType == 1)
                         {
-                            attackPlatforms.Add(new Platforms(
-                            201, 301, 20, 200, atkColor,
-                            new Vector2(150, 301), new Vector2(601, 301),
-                            new Vector2(atkSpeed, 0), true
-                            ));
+                            attackPlatforms.Add(new Platforms(620, 400, 20, 150, atkColor, new Vector2(199, 400), new Vector2(620, 300), new Vector2(atkSpeed * 1.5f, 0), false));
+                            attackPlatforms.Add(new Platforms(0 - 2000, 400, 20, 150, atkColor, new Vector2(199, 300), new Vector2(620, 400), new Vector2(atkSpeed * 2.5f, 0), true));
                         }
                         else if (attackType == 2)
                         {
-                            attackPlatforms.Add(new Platforms(
-                            201, 301, 20, 200, atkColor,
-                            new Vector2(150, 301), new Vector2(601, 301),
-                            new Vector2(atkSpeed, 0), true
-                            ));
+                            //layer one
+                            attackPlatforms.Add(new Platforms(201, 600, 110, 20, atkColor, new Vector2(201, 200), new Vector2(205, 600), new Vector2(0, atkSpeed), false));
+                            attackPlatforms.Add(new Platforms(350, 600, 250, 20, atkColor, new Vector2(201, 200), new Vector2(350, 600), new Vector2(0, atkSpeed), false));
+                            //layer two
+                            attackPlatforms.Add(new Platforms(201, 900, 260, 20, atkColor, new Vector2(201, 200), new Vector2(205, 900), new Vector2(0, atkSpeed), false));
+                            attackPlatforms.Add(new Platforms(500, 900, 100, 20, atkColor, new Vector2(500, 200), new Vector2(350, 900), new Vector2(0, atkSpeed), false));
                         }
+                        
                         else if (attackType == 3)
                         {
-                            attackPlatforms.Add(new Platforms(
-                            201, 301, 20, 200, atkColor,
-                            new Vector2(150, 301), new Vector2(601, 301),
-                            new Vector2(atkSpeed, 0), true
-                            ));
-                        }
-                        else if (attackType == 4)
-                        {
-                            attackPlatforms.Add(new Platforms(
-                            201, 301, 20, 200, atkColor,
-                            new Vector2(150, 301), new Vector2(601, 301),
-                            new Vector2(atkSpeed, 0), true
-                            ));
+                            //layer one
+                            attackPlatforms.Add(new Platforms(620, 300, 20, 30, atkColor, new Vector2(199, 300), new Vector2(620, 300), new Vector2(atkSpeed, 0), false));
+                            attackPlatforms.Add(new Platforms(620, 370, 20, 180, atkColor, new Vector2(199, 370), new Vector2(620, 370), new Vector2(atkSpeed, 0), false));
+                            //layer two
+                            attackPlatforms.Add(new Platforms(700, 330, 20, 220, atkColor, new Vector2(199, 320), new Vector2(620, 370), new Vector2(atkSpeed, 0), false));
+                            attackPlatforms.Add(new Platforms(620, 300, 120, 10, atkColor, new Vector2(199, 300), new Vector2(620, 300), new Vector2(atkSpeed, 0), false));
+
+                            //layer three
+                            attackPlatforms.Add(new Platforms(910, 300, 20, 170, atkColor, new Vector2(199, 300), new Vector2(620, 370), new Vector2(atkSpeed, 0), false));
+                            attackPlatforms.Add(new Platforms(910, 520, 20, 30, atkColor, new Vector2(199, 520), new Vector2(620, 370), new Vector2(atkSpeed, 0), false));
                         }
                     }
                 }

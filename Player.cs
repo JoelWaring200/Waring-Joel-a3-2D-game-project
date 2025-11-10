@@ -13,7 +13,7 @@ namespace MohawkGame2D
         float height;
         public int maxHealth;
         public int currentHealth;
-        float movementSpeed;
+        public float movementSpeed;
 
         private Vector2 velocity;
         private Vector2 gravity;
@@ -21,6 +21,7 @@ namespace MohawkGame2D
 
         // simple ground height (for testing)
         private float groundY = 550f;
+
 
         public Player(int x, int y, float width, float height, int maxHealth, float movementSpeed)
         {
@@ -94,24 +95,7 @@ namespace MohawkGame2D
         }
         public void Collision(List<Platforms> playerPlatforms, List<Platforms> attackPlatforms)
         {
-            //tracks edge of player area collision
-            if (y + height > groundY)
-            {
-                y = groundY - height;
-                velocity.Y = 0;
-                isGrounded = true;
-            }
-            if (x + width >= 600)
-            {
-                x = 600 - width;
-                velocity.X = 0;
-            }
-            if (x <= 200)
-            {
-                x = 200;
-                velocity.X = 0;
-            } 
-            //platforms collision
+            
             isGrounded = false;
 
             float playerLeft = x;
@@ -119,7 +103,12 @@ namespace MohawkGame2D
             float playerTop = y;
             float playerBottom = y + height;
 
-            foreach (Platforms platform in playerPlatforms)
+            // Combine both lists if you like:
+            List<Platforms> allPlatforms = new List<Platforms>();
+            allPlatforms.AddRange(playerPlatforms);
+            allPlatforms.AddRange(attackPlatforms);
+
+            foreach (Platforms platform in allPlatforms)
             {
                 float platLeft = platform.x;
                 float platRight = platform.x + platform.width;
@@ -128,92 +117,44 @@ namespace MohawkGame2D
 
                 bool overlap = playerRight > platLeft && playerLeft < platRight &&
                                playerBottom > platTop && playerTop < platBottom;
-                if (overlap)
+                if (!overlap) continue;
+
+                float fromTop = playerBottom - platTop;
+                float fromBottom = platBottom - playerTop;
+                float fromLeft = playerRight - platLeft;
+                float fromRight = platRight - playerLeft;
+                bool isVertical = (fromTop < fromLeft && fromTop < fromRight) ||
+                                  (fromBottom < fromLeft && fromBottom < fromRight);
+
+                if (fromTop < fromLeft && fromTop < fromRight && velocity.Y >= 0)
                 {
-                    // tracks if the platforms colliding
-                    float fromTop = playerBottom - platTop;
-                    float fromBottom = platBottom - playerTop;
-                    float fromLeft = playerRight - platLeft;
-                    float fromRight = platRight - playerLeft;
-                    bool isVerticalCollision = fromTop < fromLeft && fromTop < fromRight || fromBottom < fromLeft && fromBottom < fromRight;
-
-                    // top collision
-                    if (fromTop < fromLeft && fromTop < fromRight && velocity.Y > 0)
-                    {
-                        y -= fromTop;
-                        velocity.Y = 0;
-                        isGrounded = true;
-                        x += platform.speed.X * Time.DeltaTime;
-                    }
-                    // bottom collision
-                    else if (fromBottom < fromLeft && fromBottom < fromRight && velocity.Y < 0)
-                    {
-                        y += fromBottom;
-                        velocity.Y = 0;
-                    }
-                    // side collision
-                    else if (!isVerticalCollision) 
-                    {
-                        if (fromLeft < fromRight)
-                            x -= fromLeft;
-                        else
-                            x += fromRight;
-                        velocity.X = 0;
-                    }
-
+                    y -= fromTop;
+                    velocity.Y = 0;
+                    isGrounded = true;
+                }
+                else if (fromBottom < fromLeft && fromBottom < fromRight && velocity.Y < 0)
+                {
+                    y += fromBottom;
+                    velocity.Y = 0;
+                }
+                else if (!isVertical)
+                {
+                    if (fromLeft < fromRight)
+                        x -= fromLeft;
+                    else
+                        x += fromRight;
+                    velocity.X = 0;
                 }
             }
-            //does the same thing again
-            foreach (Platforms platform in attackPlatforms)
-            {
 
-                float platLeft = platform.x;
-                float platRight = platform.x + platform.width;
-                float platTop = platform.y;
-                float platBottom = platform.y + platform.height;
-
-                bool overlap = playerRight > platLeft && playerLeft < platRight &&
-                               playerBottom > platTop && playerTop < platBottom;
-                if (overlap)
-                {
-                    float fromTop = playerBottom - platTop;
-                    float fromBottom = platBottom - playerTop;
-                    float fromLeft = playerRight - platLeft;
-                    float fromRight = platRight - playerLeft;
-                    bool isVerticalCollision = fromTop < fromLeft && fromTop < fromRight || fromBottom < fromLeft && fromBottom < fromRight;
-
-
-                    if (fromTop < fromLeft && fromTop < fromRight && velocity.Y > 0)
-                    {
-                        y -= fromTop;
-                        velocity.Y = 0;
-                        isGrounded = true;
-                        x += platform.speed.X * Time.DeltaTime;
-                    }
-                    else if (fromBottom < fromLeft && fromBottom < fromRight && velocity.Y < 0)
-                    {
-                        y += fromBottom;
-                        velocity.Y = 0;
-                    }
-                    else if (!isVerticalCollision)
-                    {
-                        if (fromLeft < fromRight)
-                            x -= fromLeft;
-                        else
-                            x += fromRight;
-                        velocity.X = 0;
-                    }
-
-                }
-                
-            }
+            
+            // walls / player area
             if (playerTop <= 300 || playerBottom >= 550 || playerRight >= 600 || playerLeft <= 200)
             {
                 x = 390;
                 y = 420;
                 currentHealth -= 1;
-                velocity.X = 0;
-                velocity.Y = 0;
+                velocity = Vector2.Zero;
             }
         }
         //draws health
@@ -234,10 +175,10 @@ namespace MohawkGame2D
         public void update(List<Platforms> playerPlatforms, List<Platforms> attackPlatforms)
         {
             health();
-            simGravity();
-            drawPlayer();
-            Collision(playerPlatforms, attackPlatforms);
             movement();
+            simGravity();
+            Collision(playerPlatforms, attackPlatforms);
+            drawPlayer();
         }
     }
 }
